@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34330.188
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Korekcja-gamma", "Korekcja-gamma.csproj", "{E0EAD51B-EFDB-4396-9BBA-92EDBF7B6394}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E0EAD51B-EFDB-4396-9BBA-92EDBF7B6394}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E0EAD51B-EFDB-4396-9BBA-92EDBF7B6394}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E0EAD51B-EFDB-4396-9BBA-92EDBF7B6394}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E0EAD51B-EFDB-4396-9BBA-92EDBF7B6394}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1B21268B-8C81-47E3-B1F6-D5D1A7894708}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,9 @@
+C:\Code\ProjektJA\Korekcja-gamma\bin\Debug\Korekcja-gamma.exe.config
+C:\Code\ProjektJA\Korekcja-gamma\bin\Debug\Korekcja-gamma.exe
+C:\Code\ProjektJA\Korekcja-gamma\bin\Debug\Korekcja-gamma.pdb
+C:\Code\ProjektJA\Korekcja-gamma\obj\Debug\Korekcja-gamma.csproj.AssemblyReference.cache
+C:\Code\ProjektJA\Korekcja-gamma\obj\Debug\Korekcja_gamma.Properties.Resources.resources
+C:\Code\ProjektJA\Korekcja-gamma\obj\Debug\Korekcja-gamma.csproj.GenerateResource.cache
+C:\Code\ProjektJA\Korekcja-gamma\obj\Debug\Korekcja-gamma.csproj.CoreCompileInputs.cache
+C:\Code\ProjektJA\Korekcja-gamma\obj\Debug\Korekcja-gamma.exe
+C:\Code\ProjektJA\Korekcja-gamma\obj\Debug\Korekcja-gamma.pdb
