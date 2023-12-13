@@ -7,3 +7,4 @@ C:\Code\ProjektJA\Korekcja-gamma\obj\Debug\Korekcja-gamma.csproj.GenerateResourc
 C:\Code\ProjektJA\Korekcja-gamma\obj\Debug\Korekcja-gamma.csproj.CoreCompileInputs.cache
 C:\Code\ProjektJA\Korekcja-gamma\obj\Debug\Korekcja-gamma.exe
 C:\Code\ProjektJA\Korekcja-gamma\obj\Debug\Korekcja-gamma.pdb
+C:\Code\ProjektJA\Korekcja-gamma\obj\Debug\Korekcja_gamma.Gamma.resources
