@@ -1,0 +1,2 @@
+﻿  helpPow.c
+C:\Users\alber\source\repos\Korekcja-gamma\KorekcjaGamma\helpPow.c(1,10): fatal error C1083: Nie można otworzyć pliku prekompilowany nagłówek: 'x64\Debug\KorekcjaGamma.pch': No such file or directory
