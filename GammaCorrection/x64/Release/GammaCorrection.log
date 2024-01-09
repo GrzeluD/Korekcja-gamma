@@ -1,0 +1,3 @@
+﻿  Assembling GammaCorrection.asm...
+GammaCorrection.asm(14): error A2006: undefined symbol : pow
+C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\BuildCustomizations\masm.targets(70,5): error MSB3721: Polecenie ml64.exe /c /nologo /Zi /Fo"x64\Release\GammaCorrection.obj" /W3 /errorReport:prompt  /TaGammaCorrection.asm zostało zakończone; kod błędu: 1.
