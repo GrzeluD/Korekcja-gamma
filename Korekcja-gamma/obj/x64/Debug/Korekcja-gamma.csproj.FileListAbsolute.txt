@@ -1,0 +1,11 @@
+C:\Users\alber\Source\Repos\Korekcja-gamma\Korekcja-gamma\bin\x64\Debug\Korekcja-gamma.exe.config
+C:\Users\alber\Source\Repos\Korekcja-gamma\Korekcja-gamma\bin\x64\Debug\Korekcja-gamma.exe
+C:\Users\alber\Source\Repos\Korekcja-gamma\Korekcja-gamma\bin\x64\Debug\Korekcja-gamma.pdb
+C:\Users\alber\Source\Repos\Korekcja-gamma\Korekcja-gamma\obj\x64\Debug\Korekcja-gamma.csproj.AssemblyReference.cache
+C:\Users\alber\Source\Repos\Korekcja-gamma\Korekcja-gamma\obj\x64\Debug\Korekcja-gamma.csproj.SuggestedBindingRedirects.cache
+C:\Users\alber\Source\Repos\Korekcja-gamma\Korekcja-gamma\obj\x64\Debug\Korekcja_gamma.Gamma.resources
+C:\Users\alber\Source\Repos\Korekcja-gamma\Korekcja-gamma\obj\x64\Debug\Korekcja_gamma.Properties.Resources.resources
+C:\Users\alber\Source\Repos\Korekcja-gamma\Korekcja-gamma\obj\x64\Debug\Korekcja-gamma.csproj.GenerateResource.cache
+C:\Users\alber\Source\Repos\Korekcja-gamma\Korekcja-gamma\obj\x64\Debug\Korekcja-gamma.csproj.CoreCompileInputs.cache
+C:\Users\alber\Source\Repos\Korekcja-gamma\Korekcja-gamma\obj\x64\Debug\Korekcja-gamma.exe
+C:\Users\alber\Source\Repos\Korekcja-gamma\Korekcja-gamma\obj\x64\Debug\Korekcja-gamma.pdb
