@@ -11,11 +11,12 @@ namespace Korekcja_gamma
 {
     internal static class Program
     {
-        [DllImport(@"C:\Users\alber\Source\Repos\Korekcja-gamma\Korekcja-gamma\x64\Debug\GammaCorrection.dll")]
-        static extern float PixelMod(float[] gammaMask, int[] segmentR, int[] segmentG, int[] segmentB );
+        //[DllImport(@"C:\Users\alber\Source\Repos\Korekcja-gamma\Korekcja-gamma\x64\Debug\GammaCorrection.dll")]
+        //static extern float PixelMod(float[] gammaMask, int[] segmentR, int[] segmentG, int[] segmentB );
         /// <summary>
         /// Główny punkt wejścia dla aplikacji.
         /// </summary>
+        [STAThread]
         static void Main(string[] args)
         {        
             {
@@ -46,7 +47,7 @@ namespace Korekcja_gamma
                     Console.WriteLine("Przed:" + segmentB[1]);
 
                     
-                    PixelMod(gammaMask, segmentR, segmentG, segmentB );
+                    //PixelMod(gammaMask, segmentR, segmentG, segmentB );
                     Console.WriteLine("Po"+segmentB[0]);
                     Console.WriteLine("Po" + segmentB[1]);
                     Console.WriteLine("Po" + segmentB[2]);
@@ -62,6 +63,7 @@ namespace Korekcja_gamma
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+            Application.Run(new Gamma());
         }
     }
 }
