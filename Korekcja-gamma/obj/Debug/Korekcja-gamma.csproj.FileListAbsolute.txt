@@ -19,3 +19,14 @@ C:\Users\alber\Source\Repos\Korekcja-gamma\Korekcja-gamma\obj\Debug\Korekcja-gam
 C:\Users\alber\Source\Repos\Korekcja-gamma\Korekcja-gamma\obj\Debug\Korekcja-gamma.csproj.CoreCompileInputs.cache
 C:\Users\alber\Source\Repos\Korekcja-gamma\Korekcja-gamma\obj\Debug\Korekcja-gamma.exe
 C:\Users\alber\Source\Repos\Korekcja-gamma\Korekcja-gamma\obj\Debug\Korekcja-gamma.pdb
+C:\Users\mka2\source\Korekcja-gamma\Korekcja-gamma\obj\Debug\Korekcja-gamma.csproj.AssemblyReference.cache
+C:\Users\mka2\source\Korekcja-gamma\Korekcja-gamma\obj\Debug\Korekcja-gamma.csproj.SuggestedBindingRedirects.cache
+C:\Users\mka2\source\Korekcja-gamma\Korekcja-gamma\obj\Debug\Korekcja_gamma.Gamma.resources
+C:\Users\mka2\source\Korekcja-gamma\Korekcja-gamma\obj\Debug\Korekcja_gamma.Properties.Resources.resources
+C:\Users\mka2\source\Korekcja-gamma\Korekcja-gamma\obj\Debug\Korekcja-gamma.csproj.GenerateResource.cache
+C:\Users\mka2\source\Korekcja-gamma\Korekcja-gamma\obj\Debug\Korekcja-gamma.csproj.CoreCompileInputs.cache
+C:\Users\mka2\source\Korekcja-gamma\Korekcja-gamma\obj\Debug\Korekcja-gamma.exe
+C:\Users\mka2\source\Korekcja-gamma\Korekcja-gamma\obj\Debug\Korekcja-gamma.pdb
+C:\Users\mka2\source\Korekcja-gamma\Korekcja-gamma\bin\Debug\Korekcja-gamma.exe.config
+C:\Users\mka2\source\Korekcja-gamma\Korekcja-gamma\bin\Debug\Korekcja-gamma.exe
+C:\Users\mka2\source\Korekcja-gamma\Korekcja-gamma\bin\Debug\Korekcja-gamma.pdb
