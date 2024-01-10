@@ -1,3 +1,4 @@
+extern vectorPow:PROC
 .data
 const_255 dd 255.0
 pow_arg dq 0.0 
@@ -5,6 +6,7 @@ pow_arg dq 0.0
 vectorG dd 0.25
 
 .code
+
 PixelMod PROC
 
 
@@ -12,23 +14,33 @@ PixelMod PROC
 	vmovdqu ymm1, ymmword ptr [r8] 
 	vmovdqu ymm2, ymmword ptr [r9] 
 	vmovdqu ymm4, ymmword ptr [rcx]
+	;ymm5 bedzie jako tymczasowa tablica wynikowa
 	
-
 	vcvtdq2ps ymm0, ymm0 ;liczby zmiennoprzecinkowe jednej precyzji
 	vcvtdq2ps ymm1, ymm1
 	vcvtdq2ps ymm2, ymm2 
 
 	vbroadcastss ymm3, [const_255]  ; Rozg³asza pojedyncz¹ wartoœæ 32-bitow¹ do wszystkich komórek ymm3
 	
-	vdivps ymm0, ymm0, ymm3;
-	vdivps ymm1, ymm1, ymm3;
-	vdivps ymm2, ymm2, ymm3;
+	vdivps ymm0, ymm0, ymm3
+	vdivps ymm1, ymm1, ymm3
+	vdivps ymm2, ymm2, ymm3
 
-	vmulps ymm2, ymm2, ymm4
+	mov r10, rdx ;zapisanie sobie pointerow na tablice poniewaz teraz bedziemy operowac na nizszych rejestrach
+	mov r11, r8
+	mov r12, r9
 
-	vmulps ymm0, ymm0, ymm3;
-	vmulps ymm1, ymm1, ymm3; 
-	vmulps ymm2, ymm2, ymm3; 
+	;operacja potegowania
+
+	mov r8, rdx ; tablica ymm0 na r8 zeby zapisac wyniki
+	call vectorPow 
+	ret
+
+	;vmulps ymm0, ymm0, ymm4
+
+	vmulps ymm0, ymm0, ymm3
+	vmulps ymm1, ymm1, ymm3 
+	vmulps ymm2, ymm2, ymm3 
 
 	vcvtps2dq ymm0, ymm0  ; Konwertuje zmiennoprzecinkowe wartoœci w ymm0 na ca³kowite
 	vcvtps2dq ymm1, ymm1
@@ -42,4 +54,4 @@ PixelMod PROC
 
 	ret
 PixelMod ENDP
-end
+END
