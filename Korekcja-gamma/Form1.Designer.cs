@@ -59,7 +59,6 @@
             this.transparencyTrackBar.Maximum = 100;
             this.transparencyTrackBar.Minimum = -100;
             this.transparencyTrackBar.Name = "transparencyTrackBar";
-            this.transparencyTrackBar.Value = 0;
             this.transparencyTrackBar.Scroll += new System.EventHandler(this.transparencyTrackBar_Scroll);
             // 
             // processImageButton

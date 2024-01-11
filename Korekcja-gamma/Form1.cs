@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Diagnostics;
 using System.IO;
+using System.Collections.Generic;
 
 namespace Korekcja_gamma
 {
@@ -14,6 +15,9 @@ namespace Korekcja_gamma
         private double gammaValue = 1.0;
         private int selectedThreads = 1;
         private PictureBox processedPictureBox;
+        public List<int> redColorArray = new List<int>();
+        public List<int> greenColorArray = new List<int>();
+        public List<int> blueColorArray = new List<int>();
 
         public Gamma()
         {
@@ -141,8 +145,7 @@ namespace Korekcja_gamma
                     int width = originalBitmap.Width;
                     int height = originalBitmap.Height;
 
-                    // Zapis informacji o pikselach do pliku tekstowego
-                    using (StreamWriter writer = new StreamWriter(saveFileDialog.FileName))
+                    
                     {
                         for (int y = 0; y < height; y++)
                         {
@@ -150,9 +153,21 @@ namespace Korekcja_gamma
                             {
                                 Color pixelColor = originalBitmap.GetPixel(x, y);
 
-                                writer.WriteLine($"Pixel at ({x}, {y}): R={pixelColor.R}, G={pixelColor.G}, B={pixelColor.B}");
+                                redColorArray.Add(pixelColor.R);
+                                greenColorArray.Add(pixelColor.G);
+                                blueColorArray.Add(pixelColor.B);
+
+                              
                             }
                         }
+                    }
+
+                    // Zapis informacji o pikselach do pliku tekstowego
+                    using (StreamWriter writer = new StreamWriter(saveFileDialog.FileName))
+
+                    foreach (int liczba in redColorArray)
+                    {
+                        writer.WriteLine($"{liczba}");
                     }
 
                     MessageBox.Show($"Pixel information saved to {saveFileDialog.FileName}");

@@ -119,7 +119,7 @@
   </resheader>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="loadImageButton.Location" type="System.Drawing.Point, System.Drawing">
-    <value>206, 118</value>
+    <value>122, 118</value>
   </data>
   <data name="loadImageButton.Size" type="System.Drawing.Size, System.Drawing">
     <value>75, 23</value>
@@ -144,7 +144,7 @@
     <value>6</value>
   </data>
   <data name="pictureBox.Location" type="System.Drawing.Point, System.Drawing">
-    <value>335, 58</value>
+    <value>244, 62</value>
   </data>
   <data name="pictureBox.Size" type="System.Drawing.Size, System.Drawing">
     <value>115, 142</value>
@@ -244,7 +244,7 @@
     <value>2</value>
   </data>
   <data name="dropDown.Location" type="System.Drawing.Point, System.Drawing">
-    <value>486, 118</value>
+    <value>538, 120</value>
   </data>
   <data name="dropDown.Size" type="System.Drawing.Size, System.Drawing">
     <value>121, 21</value>
@@ -268,7 +268,7 @@
     <value>True</value>
   </data>
   <data name="threadsLabel.Location" type="System.Drawing.Point, System.Drawing">
-    <value>486, 93</value>
+    <value>535, 93</value>
   </data>
   <data name="threadsLabel.Size" type="System.Drawing.Size, System.Drawing">
     <value>97, 13</value>
