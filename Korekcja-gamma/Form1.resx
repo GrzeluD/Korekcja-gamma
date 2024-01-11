@@ -119,7 +119,7 @@
   </resheader>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="loadImageButton.Location" type="System.Drawing.Point, System.Drawing">
-    <value>206, 118</value>
+    <value>110, 118</value>
   </data>
   <data name="loadImageButton.Size" type="System.Drawing.Size, System.Drawing">
     <value>75, 23</value>
@@ -141,10 +141,10 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;loadImageButton.ZOrder" xml:space="preserve">
-    <value>6</value>
+    <value>7</value>
   </data>
   <data name="pictureBox.Location" type="System.Drawing.Point, System.Drawing">
-    <value>335, 58</value>
+    <value>229, 61</value>
   </data>
   <data name="pictureBox.Size" type="System.Drawing.Size, System.Drawing">
     <value>115, 142</value>
@@ -166,7 +166,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;pictureBox.ZOrder" xml:space="preserve">
-    <value>5</value>
+    <value>6</value>
   </data>
   <data name="transparencyTrackBar.Location" type="System.Drawing.Point, System.Drawing">
     <value>206, 256</value>
@@ -187,13 +187,13 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;transparencyTrackBar.ZOrder" xml:space="preserve">
-    <value>4</value>
+    <value>5</value>
   </data>
   <data name="processImageButton.Enabled" type="System.Boolean, mscorlib">
     <value>False</value>
   </data>
   <data name="processImageButton.Location" type="System.Drawing.Point, System.Drawing">
-    <value>335, 340</value>
+    <value>229, 340</value>
   </data>
   <data name="processImageButton.Size" type="System.Drawing.Size, System.Drawing">
     <value>115, 23</value>
@@ -202,7 +202,7 @@
     <value>3</value>
   </data>
   <data name="processImageButton.Text" xml:space="preserve">
-    <value>Change gamma</value>
+    <value>Assembler gamma</value>
   </data>
   <data name="&gt;&gt;processImageButton.Name" xml:space="preserve">
     <value>processImageButton</value>
@@ -214,7 +214,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;processImageButton.ZOrder" xml:space="preserve">
-    <value>3</value>
+    <value>4</value>
   </data>
   <data name="transparencyLabel.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -241,10 +241,10 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;transparencyLabel.ZOrder" xml:space="preserve">
-    <value>2</value>
+    <value>3</value>
   </data>
   <data name="dropDown.Location" type="System.Drawing.Point, System.Drawing">
-    <value>486, 118</value>
+    <value>532, 118</value>
   </data>
   <data name="dropDown.Size" type="System.Drawing.Size, System.Drawing">
     <value>121, 21</value>
@@ -262,13 +262,13 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;dropDown.ZOrder" xml:space="preserve">
-    <value>1</value>
+    <value>2</value>
   </data>
   <data name="threadsLabel.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
   <data name="threadsLabel.Location" type="System.Drawing.Point, System.Drawing">
-    <value>486, 93</value>
+    <value>529, 85</value>
   </data>
   <data name="threadsLabel.Size" type="System.Drawing.Size, System.Drawing">
     <value>97, 13</value>
@@ -289,6 +289,33 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;threadsLabel.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="processImageButtonCS.Enabled" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="processImageButtonCS.Location" type="System.Drawing.Point, System.Drawing">
+    <value>433, 340</value>
+  </data>
+  <data name="processImageButtonCS.Size" type="System.Drawing.Size, System.Drawing">
+    <value>75, 23</value>
+  </data>
+  <data name="processImageButtonCS.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="processImageButtonCS.Text" xml:space="preserve">
+    <value>C# gamma</value>
+  </data>
+  <data name="&gt;&gt;processImageButtonCS.Name" xml:space="preserve">
+    <value>processImageButtonCS</value>
+  </data>
+  <data name="&gt;&gt;processImageButtonCS.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;processImageButtonCS.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;processImageButtonCS.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">

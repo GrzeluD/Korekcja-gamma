@@ -36,6 +36,7 @@
             this.transparencyLabel = new System.Windows.Forms.Label();
             this.dropDown = new System.Windows.Forms.ComboBox();
             this.threadsLabel = new System.Windows.Forms.Label();
+            this.processImageButtonCS = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.transparencyTrackBar)).BeginInit();
             this.SuspendLayout();
@@ -59,7 +60,6 @@
             this.transparencyTrackBar.Maximum = 100;
             this.transparencyTrackBar.Minimum = -100;
             this.transparencyTrackBar.Name = "transparencyTrackBar";
-            this.transparencyTrackBar.Value = 0;
             this.transparencyTrackBar.Scroll += new System.EventHandler(this.transparencyTrackBar_Scroll);
             // 
             // processImageButton
@@ -87,10 +87,18 @@
             resources.ApplyResources(this.threadsLabel, "threadsLabel");
             this.threadsLabel.Name = "threadsLabel";
             // 
+            // processImageButtonCS
+            // 
+            resources.ApplyResources(this.processImageButtonCS, "processImageButtonCS");
+            this.processImageButtonCS.Name = "processImageButtonCS";
+            this.processImageButtonCS.UseVisualStyleBackColor = true;
+            this.processImageButtonCS.Click += new System.EventHandler(this.processImageButtonCS_Click);
+            // 
             // Gamma
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.processImageButtonCS);
             this.Controls.Add(this.threadsLabel);
             this.Controls.Add(this.dropDown);
             this.Controls.Add(this.transparencyLabel);
@@ -116,6 +124,7 @@
         private System.Windows.Forms.Label transparencyLabel;
         private System.Windows.Forms.ComboBox dropDown;
         private System.Windows.Forms.Label threadsLabel;
+        private System.Windows.Forms.Button processImageButtonCS;
     }
 }
 
