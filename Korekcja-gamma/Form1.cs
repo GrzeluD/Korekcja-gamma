@@ -9,32 +9,32 @@ namespace Korekcja_gamma
 {
     public partial class Gamma : Form
     {
-        private Bitmap originalBitmap;
-        private Bitmap processedBitmap;
-        private double gammaValue = 1.0;
-        private int selectedThreads = 1;
-        private PictureBox processedPictureBox;
+        private Bitmap originalBitmap;  // Oryginalny obraz wczytany z pliku
+        private Bitmap processedBitmap; // Przetworzony obraz po korekcji gamma
+        private double gammaValue = 1.0; // Wartość gamma dla korekcji
+        private int selectedThreads = 1; // Liczba wątków (nieużywane w obecnym kodzie)
+        private PictureBox processedPictureBox; // PictureBox dla przetworzonego obrazu
 
         public Gamma()
         {
             InitializeComponent();
         }
 
-        // Funkcja sprawdzająca, czy przycisk przetwarzania powinien być aktywny
+        // Sprawdza, czy przycisk przetwarzania powinien być aktywny
         private void CheckButtonEnabledState()
         {
+            
             processImageButton.Enabled = originalBitmap != null && transparencyTrackBar.Value != 0;
         }
-
+       
         // Obsługa kliknięcia przycisku wczytania obrazu
         private void loadImageButton_Click(object sender, EventArgs e)
         {
-            // Wybór pliku z obrazem
+            
             using (OpenFileDialog openFileDialog = new OpenFileDialog())
             {
                 openFileDialog.Filter = "Image Files|*.bmp;*.jpg;*.jpeg;*.png;*.gif;*.tif;*.tiff|All files (*.*)|*.*";
 
-                // Wyświetlenie wybranego obrazu w PictureBox
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
                     pictureBox.ImageLocation = openFileDialog.FileName;
@@ -48,15 +48,17 @@ namespace Korekcja_gamma
         // Obsługa zmiany wartości suwaka przezroczystości
         private void transparencyTrackBar_Scroll(object sender, EventArgs e)
         {
+            
             int transparencyValue = transparencyTrackBar.Value;
             transparencyLabel.Text = $"{transparencyValue}";
             CheckButtonEnabledState();
         }
-
+        
         // Obsługa kliknięcia przycisku przetwarzania obrazu
         private void processImageButton_Click(object sender, EventArgs e)
         {
-            gammaValue = transparencyTrackBar.Value / 10.0;
+            
+            gammaValue = Math.Max(0.1, transparencyTrackBar.Value / 10.0); // Dostosowano wartość minimalną
 
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
@@ -80,9 +82,10 @@ namespace Korekcja_gamma
             }, TaskScheduler.FromCurrentSynchronizationContext());
         }
 
-        // Funkcja wykonująca korekcję gamma na obrazie
+        // Funkcja zapisująca informacje o pikselach do pliku
         private void ApplyGammaCorrection()
         {
+            
             if (originalBitmap != null)
             {
                 processedBitmap = new Bitmap(originalBitmap.Width, originalBitmap.Height);
@@ -100,21 +103,23 @@ namespace Korekcja_gamma
             }
         }
 
+
+
         // Funkcja stosująca korekcję gamma do pojedynczego piksela
         private Color ApplyGammaToPixel(Color pixel, double gamma)
         {
-            double red = (double)pixel.R / 255.0;
-            double green = (double)pixel.G / 255.0;
-            double blue = (double)pixel.B / 255.0;
+            double red = Math.Pow((double)pixel.R / 255.0, gamma) * 255;
+            double green = Math.Pow((double)pixel.G / 255.0, gamma) * 255;
+            double blue = Math.Pow((double)pixel.B / 255.0, gamma) * 255;
 
-            double newR = Math.Pow(red, gamma) * 255;
-            double newG = Math.Pow(green, gamma) * 255;
-            double newB = Math.Pow(blue, gamma) * 255;
+            // Ogranicz wartości do zakresu 0-255
+            red = Math.Max(0, Math.Min(255, red));
+            green = Math.Max(0, Math.Min(255, green));
+            blue = Math.Max(0, Math.Min(255, blue));
 
-            return Color.FromArgb((int)newR, (int)newG, (int)newB);
+            return Color.FromArgb((int)red, (int)green, (int)blue);
         }
 
-        // Funkcja obsługująca załadowanie okna aplikacji
         private void Gamma_Load(object sender, EventArgs e)
         {
             int maxThreads = Environment.ProcessorCount;
@@ -131,6 +136,7 @@ namespace Korekcja_gamma
         // Funkcja zapisująca informacje o pikselach do pliku
         private void SavePixelInformationToFile()
         {
+            
             if (originalBitmap != null)
             {
                 SaveFileDialog saveFileDialog = new SaveFileDialog();
@@ -163,6 +169,7 @@ namespace Korekcja_gamma
         // Funkcja wyświetlająca przetworzony obraz w PictureBox
         private void ShowProcessedBitmap()
         {
+            
             if (processedPictureBox != null)
             {
                 Controls.Remove(processedPictureBox);
