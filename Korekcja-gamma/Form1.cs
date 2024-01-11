@@ -5,6 +5,10 @@ using System.Windows.Forms;
 using System.Diagnostics;
 using System.IO;
 using System.Collections.Generic;
+using System.Windows.Forms;
+using System.Runtime.InteropServices;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Korekcja_gamma
 {
@@ -18,6 +22,9 @@ namespace Korekcja_gamma
         public List<int> redColorArray = new List<int>();
         public List<int> greenColorArray = new List<int>();
         public List<int> blueColorArray = new List<int>();
+
+        [DllImport(@"C:\Users\alber\Source\Repos\Korekcja-gamma\Korekcja-gamma\x64\Debug\GammaCorrection.dll")]
+        static extern float PixelMod(float[] gammaMask, int[] segmentR, int[] segmentG, int[] segmentB);
 
         public Gamma()
         {
@@ -61,7 +68,88 @@ namespace Korekcja_gamma
         // Obsługa kliknięcia przycisku przetwarzania obrazu
         private void processImageButton_Click(object sender, EventArgs e)
         {
+            float gamma = transparencyTrackBar.Value;
+            if (gamma < 0) gamma = (gamma/100)*(-1);        
+            else gamma=1+(gamma/100);
+
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+
+            float[] gammaMask = new float[8];
+            FillColorArraysFromBitmap();
+            for (int i = 0; i < gammaMask.Length; i++)
+            {
+                gammaMask[i] = gamma;
+            }
+            //List<int> segmentR = new List<int>();
+            //List<int> segmentG = new List<int>();
+            //List<int> segmentB = new List<int>();
+            int[] segmentR = new int[8];
+            int[] segmentG = new int[8];
+            int[] segmentB = new int[8];
+            //if (redColorArray.Count % 8 == 0) { MessageBox.Show("YES"); }
+            int totalLength = redColorArray.Count;
+            for (int i = 0; i < redColorArray.Count; i += 8)
+            {
+                int length = Math.Min(8, totalLength - i);
+                /*Array.Copy(redColorArray, 0, segmentR, 0, 8);
+                Array.Copy(greenColorArray, 0, segmentG, 0, 8);
+                Array.Copy(blueColorArray, 0, segmentB, 0, 8);*/
+                redColorArray.CopyTo(i, segmentR, 0, length);
+                blueColorArray.CopyTo(i, segmentG, 0, length);
+                greenColorArray.CopyTo(i, segmentB, 0, length);
+                PixelMod(gammaMask, segmentR, segmentG, segmentB);
+                for (int j = 0; j < length; j++)
+                {
+                    redColorArray[j+i] = segmentR[j];
+                    blueColorArray[j+i] = segmentB[j];
+                    greenColorArray[j+i] = segmentG[j];
+                }
+            }
+
+            stopwatch.Stop();
+            long elapsedMilliseconds = stopwatch.ElapsedMilliseconds;
+
+            MessageBox.Show($"Czas przetwarzania: {elapsedMilliseconds} ms");
             SavePixelInformationToFile();
+            UpdateProcessedBitmapFromColorArrays();
+            ShowProcessedBitmap();
+        }
+        private void FillColorArraysFromBitmap()
+        {
+            redColorArray.Clear();
+            greenColorArray.Clear();
+            blueColorArray.Clear();
+
+            for (int y = 0; y < originalBitmap.Height; y++)
+            {
+                for (int x = 0; x < originalBitmap.Width; x++)
+                {
+                    Color pixel = originalBitmap.GetPixel(x, y);
+                    redColorArray.Add(pixel.R);
+                    greenColorArray.Add(pixel.G);
+                    blueColorArray.Add(pixel.B);
+                }
+            }
+        }
+
+        private void UpdateProcessedBitmapFromColorArrays()
+        {
+            processedBitmap = new Bitmap(originalBitmap.Width, originalBitmap.Height);
+
+            int width = originalBitmap.Width;
+            int height = originalBitmap.Height;
+            int index = 0;
+
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    Color newColor = Color.FromArgb(redColorArray[index], greenColorArray[index], blueColorArray[index]);
+                    processedBitmap.SetPixel(x, y, newColor);
+                    index++;
+                }
+            }
         }
 
         // Funkcja wykonująca korekcję gamma na obrazie
