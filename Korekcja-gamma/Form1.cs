@@ -16,7 +16,7 @@ namespace Korekcja_gamma
     {
         private Bitmap originalBitmap;
         private Bitmap processedBitmap;
-        private double gammaValue = 1.0;
+        private double gammaValue = 0.0;
         private int selectedThreads = 1;
         private PictureBox processedPictureBox;
         public List<int> redColorArray = new List<int>();
@@ -68,9 +68,9 @@ namespace Korekcja_gamma
         // Obsługa kliknięcia przycisku przetwarzania obrazu
         private void processImageButton_Click(object sender, EventArgs e)
         {
-            float gamma = transparencyTrackBar.Value;
-            if (gamma < 0) gamma = (gamma/100)*(-1);        
-            else gamma=1+(gamma/100);
+            float gammaM = transparencyTrackBar.Value;
+            if (gammaM < 0) gammaM = (gammaM/100)*(-1);        
+            else gammaM=1+(gammaM/100);
 
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
@@ -79,7 +79,7 @@ namespace Korekcja_gamma
             FillColorArraysFromBitmap();
             for (int i = 0; i < gammaMask.Length; i++)
             {
-                gammaMask[i] = gamma;
+                gammaMask[i] = gammaM;
             }
             //List<int> segmentR = new List<int>();
             //List<int> segmentG = new List<int>();
@@ -174,16 +174,14 @@ namespace Korekcja_gamma
 
         // Funkcja stosująca korekcję gamma do pojedynczego piksela
         private Color ApplyGammaToPixel(Color pixel, double gamma)
-        {
-            double red = (double)pixel.R / 255.0;
-            double green = (double)pixel.G / 255.0;
-            double blue = (double)pixel.B / 255.0;
+        {          
 
-            double newR = Math.Pow(red, gamma) * 255;
-            double newG = Math.Pow(green, gamma) * 255;
-            double newB = Math.Pow(blue, gamma) * 255;
+            double red = Math.Pow((double)pixel.R / 255.0, gamma) * 255;
+            double green = Math.Pow((double)pixel.G / 255.0, gamma) * 255;
+            double blue = Math.Pow((double)pixel.B / 255.0, gamma) * 255;
 
-            return Color.FromArgb((int)newR, (int)newG, (int)newB);
+            return Color.FromArgb((int)red, (int)green, (int)blue);
+
         }
 
         // Funkcja obsługująca załadowanie okna aplikacji
@@ -266,7 +264,15 @@ namespace Korekcja_gamma
 
         private void processImageButtonCS_Click(object sender, EventArgs e)
         {
-            gammaValue = transparencyTrackBar.Value / 10.0;
+            gammaValue = transparencyTrackBar.Value;/// 10.0;
+
+
+            if (gammaValue < 0)
+            {
+                gammaValue =1-( (gammaValue / 100)* (-1));
+            }
+            else
+            { gammaValue = (gammaValue / 10); }
 
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
