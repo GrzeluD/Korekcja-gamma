@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Drawing;
 using System.Drawing.Imaging;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace Korekcja_gamma
 {
@@ -22,12 +23,13 @@ namespace Korekcja_gamma
         private double gammaValue = 0.0;
         private int selectedThreads = 1;
         private PictureBox processedPictureBox;
+        private System.Windows.Forms.Button downloadButton;
         public List<int> redColorArray = new List<int>();
         public List<int> greenColorArray = new List<int>();
         public List<int> blueColorArray = new List<int>();
         private int check = 0;
 
-        [DllImport(@"C:\Users\alber\Source\Repos\Korekcja-gamma\Korekcja-gamma\x64\Debug\GammaCorrection.dll")]
+        [DllImport(@"C:\Code\ProjektJA\Korekcja-gamma\x64\Debug\GammaCorrection.dll")]
         static extern float PixelMod(float[] gammaMask, int[] segmentR, int[] segmentG, int[] segmentB);
 
         public Gamma()
@@ -97,6 +99,8 @@ namespace Korekcja_gamma
             byte[] pixelData = new byte[byteCount];
             Marshal.Copy(originalData.Scan0, pixelData, 0, byteCount);
 
+            threatsFromInput();
+
             var parallelOptions = new ParallelOptions { MaxDegreeOfParallelism = selectedThreads };
 
             Parallel.For(0, originalData.Height, parallelOptions, y =>
@@ -139,8 +143,7 @@ namespace Korekcja_gamma
             processedBitmap.UnlockBits(processedData);
 
             stopwatch.Stop();
-            MessageBox.Show($"Czas przetwarzania: {stopwatch.ElapsedMilliseconds} ms");
-            SavePixelInformationToFile();
+            MessageBox.Show($"Converting time: {stopwatch.ElapsedMilliseconds} ms");
             ShowProcessedBitmap();
 
         }
@@ -162,6 +165,8 @@ namespace Korekcja_gamma
 
                 // Kopiowanie danych pikseli do tablicy
                 Marshal.Copy(originalData.Scan0, pixelData, 0, pixelData.Length);
+
+                threatsFromInput();
 
                 // Ustawienie opcji Parallel
                 var parallelOptions = new ParallelOptions { MaxDegreeOfParallelism = selectedThreads };
@@ -204,65 +209,53 @@ namespace Korekcja_gamma
 
         }
 
-        // Funkcja obsługująca załadowanie okna aplikacji
-        private void Gamma_Load(object sender, EventArgs e)
+        private void textBox1_KeyPress(object sender, KeyPressEventArgs e)
         {
-            int maxThreads = Environment.ProcessorCount;
-
-            // Dodanie liczby wątków do ComboBox
-            for (int i = 1; i <= maxThreads; i++)
+            // Sprawdź, czy wprowadzony znak to cyfra lub backspace
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
             {
-                dropDown.Items.Add(i);
+                // Jeśli nie jest cyfrą ani backspace, zatrzymaj wprowadzanie znaku
+                e.Handled = true;
             }
-
-            dropDown.SelectedIndex = 0;
         }
 
-        // Funkcja zapisująca informacje o pikselach do pliku
-        private void SavePixelInformationToFile()
+        // Funkcja sprawdzająca ilość wątków z inputa
+        private void threatsFromInput()
         {
-            if (originalBitmap != null)
+         int maxThreads = Environment.ProcessorCount;
+            if (int.TryParse(textBox1.Text, out int userInput))
             {
-                SaveFileDialog saveFileDialog = new SaveFileDialog();
-                saveFileDialog.Filter = "Text Files|*.txt";
-
-                if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                if (userInput > maxThreads)
                 {
-                    int width = originalBitmap.Width;
-                    int height = originalBitmap.Height;
-
-
-                    {
-                        for (int y = 0; y < height; y++)
-                        {
-                            for (int x = 0; x < width; x++)
-                            {
-                                Color pixelColor = originalBitmap.GetPixel(x, y);
-
-                                redColorArray.Add(pixelColor.R);
-                                greenColorArray.Add(pixelColor.G);
-                                blueColorArray.Add(pixelColor.B);
-                            }
-                        }
-                    }
-
-                    // Zapis informacji o pikselach do pliku tekstowego
-                    using (StreamWriter writer = new StreamWriter(saveFileDialog.FileName))
-
-                        foreach (int liczba in redColorArray)
-                        {
-                            writer.WriteLine($"{liczba}");
-                        }
-
-                    MessageBox.Show($"Pixel information saved to {saveFileDialog.FileName}");
+                    // Wpisana liczba jest większa niż maksymalna liczba wątków
+                    MessageBox.Show($"Typed number ({userInput}) is higher than max number of threats ({maxThreads}).", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show($"Number of threads set: {maxThreads}", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    selectedThreads = 16;
                 }
+                else
+                {
+                    MessageBox.Show($"Number of threads set: {maxThreads}", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    selectedThreads = userInput;
+                }
+            }
+            else
+            {
+                // Nic nie jest wpisane w textBox
+                MessageBox.Show("Empty thread input. Number of threads set: 1", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                selectedThreads = 1;
             }
         }
 
         // Funkcja wyświetlająca przetworzony obraz w PictureBox
         private void ShowProcessedBitmap()
         {
-            
+
+            if (downloadButton != null)
+            {
+                Controls.Remove(downloadButton);
+                downloadButton.Dispose();
+            }
+
             if (processedPictureBox != null)
             {
                 Controls.Remove(processedPictureBox);
@@ -276,7 +269,22 @@ namespace Korekcja_gamma
                 SizeMode = PictureBoxSizeMode.Zoom,
                 Image = processedBitmap
             };
+
+            downloadButton = new System.Windows.Forms.Button
+            {
+                Name = "downloadButton",
+                Size = new Size(80, 30),
+                Location = new Point(pictureBox.Location.X + pictureBox.Width + 200, pictureBox.Location.Y + pictureBox.Height),
+                Text = "Download",
+            };
+
+            downloadButton.Click += DownloadButton_Click;
+
+
             Controls.Add(processedPictureBox);
+            Controls.Add(downloadButton);
+            downloadButton.BringToFront();
+            downloadButton.Show();
             processedPictureBox.BringToFront();
             processedPictureBox.Show();
         }
@@ -305,11 +313,23 @@ namespace Korekcja_gamma
                 stopwatch.Stop();
                 long elapsedMilliseconds = stopwatch.ElapsedMilliseconds;
 
-                MessageBox.Show($"Czas przetwarzania: {elapsedMilliseconds} ms");
+                MessageBox.Show($"Converting time: {elapsedMilliseconds} ms");
 
-                SavePixelInformationToFile(); // Zapis informacji o pikselach do pliku
                 ShowProcessedBitmap(); // Wyświetlenie przetworzonego obrazu
             }, TaskScheduler.FromCurrentSynchronizationContext());
+        }
+
+        private void DownloadButton_Click(object sender, EventArgs e)
+        {
+            // Tutaj dodaj kod do zapisu przetworzonego obrazu, na przykład w formacie JPEG
+            SaveFileDialog saveDialog = new SaveFileDialog();
+            saveDialog.Filter = "Pliki JPEG (*.jpg)|*.jpg|Wszystkie pliki (*.*)|*.*";
+
+            if (saveDialog.ShowDialog() == DialogResult.OK)
+            {
+                processedBitmap.Save(saveDialog.FileName, ImageFormat.Jpeg);
+                MessageBox.Show("Converted picture has been saved.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
         }
     }
 }

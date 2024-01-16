@@ -34,9 +34,9 @@
             this.transparencyTrackBar = new System.Windows.Forms.TrackBar();
             this.processImageButton = new System.Windows.Forms.Button();
             this.transparencyLabel = new System.Windows.Forms.Label();
-            this.dropDown = new System.Windows.Forms.ComboBox();
             this.threadsLabel = new System.Windows.Forms.Label();
             this.processImageButtonCS = new System.Windows.Forms.Button();
+            this.textBox1 = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.transparencyTrackBar)).BeginInit();
             this.SuspendLayout();
@@ -74,14 +74,6 @@
             resources.ApplyResources(this.transparencyLabel, "transparencyLabel");
             this.transparencyLabel.Name = "transparencyLabel";
             // 
-            // dropDown
-            // 
-            this.dropDown.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.dropDown.FormattingEnabled = true;
-            resources.ApplyResources(this.dropDown, "dropDown");
-            this.dropDown.Name = "dropDown";
-            this.dropDown.Sorted = true;
-            // 
             // threadsLabel
             // 
             resources.ApplyResources(this.threadsLabel, "threadsLabel");
@@ -94,20 +86,27 @@
             this.processImageButtonCS.UseVisualStyleBackColor = true;
             this.processImageButtonCS.Click += new System.EventHandler(this.processImageButtonCS_Click);
             // 
+            // textBox1
+            // 
+            resources.ApplyResources(this.textBox1, "textBox1");
+            this.textBox1.Name = "textBox1";
+            this.textBox1.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox1_KeyPress);
+
+            this.Controls.Add(this.textBox1);
+            // 
             // Gamma
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.textBox1);
             this.Controls.Add(this.processImageButtonCS);
             this.Controls.Add(this.threadsLabel);
-            this.Controls.Add(this.dropDown);
             this.Controls.Add(this.transparencyLabel);
             this.Controls.Add(this.processImageButton);
             this.Controls.Add(this.transparencyTrackBar);
             this.Controls.Add(this.pictureBox);
             this.Controls.Add(this.loadImageButton);
             this.Name = "Gamma";
-            this.Load += new System.EventHandler(this.Gamma_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.transparencyTrackBar)).EndInit();
             this.ResumeLayout(false);
@@ -122,9 +121,9 @@
         private System.Windows.Forms.TrackBar transparencyTrackBar;
         private System.Windows.Forms.Button processImageButton;
         private System.Windows.Forms.Label transparencyLabel;
-        private System.Windows.Forms.ComboBox dropDown;
         private System.Windows.Forms.Label threadsLabel;
         private System.Windows.Forms.Button processImageButtonCS;
+        private System.Windows.Forms.TextBox textBox1;
     }
 }
 
