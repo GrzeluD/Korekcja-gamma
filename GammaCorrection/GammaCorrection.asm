@@ -1,4 +1,4 @@
-extern vectorPow:PROC
+;extern vectorPow:PROC
 .data
 const_255 dd 255.0
 const_1 dd 1.0
@@ -18,7 +18,7 @@ PixelMod PROC
 	vmovdqu ymm2, ymmword ptr [r9]
 	vmovdqu ymm4, ymmword ptr [rcx]
 	
-	vcvtdq2ps ymm0, ymm0 ;liczby zmiennoprzecinkowe jednej precyzji
+	vcvtdq2ps ymm0, ymm0 ;vector to float
 	vcvtdq2ps ymm1, ymm1
 	vcvtdq2ps ymm2, ymm2 
 
@@ -34,17 +34,16 @@ PixelMod PROC
 	vmovdqu ymm10 , ymm1
 	vmovdqu ymm11 , ymm2
 
-	; Porównanie ymm4 i ymm5. U¿ywamy vcmppd (Compare Packed Double-Precision Floating-Point Values),
-	; z opcj¹ '1' dla 'less than' i '17' dla 'greater than'
-	vcmppd ymm6, ymm4, ymm5, 1   ; ymm6 bêdzie zawieraæ maskê bitow¹ porównania 'less than' 1 to mniej niz
-	vcmppd ymm7, ymm4, ymm5, 6  ; ymm7 bêdzie zawieraæ maskê bitow¹ porównania 'not less not equal' 6 
+	; Porównanie ymm4 i ymm5. 
+	vcmppd ymm6, ymm4, ymm5, 1   ; bit mask of comparrision
+	vcmppd ymm7, ymm4, ymm5, 6  
 
 	; Sprawdzanie wyniku porównania. U¿ywamy instrukcji test do sprawdzenia, czy jakiekolwiek bity s¹ ustawione
-	vptest ymm6, ymm6  ; Testuje, czy jakikolwiek bit w ymm6 jest ustawiony (czy jakiekolwiek elementy ymm4 s¹ mniejsze ni¿ ymm5)
-	jnz less           ; Skok do etykiety 'less' jeœli ymm4 < ymm5
+	vptest ymm6, ymm6 
+	jnz less           ; ymm4 < ymm5
 
-	vptest ymm7, ymm7  ; Testuje, czy jakikolwiek bit w ymm7 jest ustawiony (czy jakiekolwiek elementy ymm4 s¹ wiêksze ni¿ ymm5)
-	jnz greater        ; Skok do etykiety 'greater' jeœli ymm4 > ymm5
+	vptest ymm7, ymm7  
+	jnz greater        ; ymm4 > ymm5
 
 	less:
 	
@@ -76,7 +75,7 @@ PixelMod PROC
 
 	jmp programexit
 
-		;vcmppd ymm6, ymm4, ymm5, 0 ;Test czy tablica gammy sie wyzerowala
+		;vcmppd ymm6, ymm4, ymm5, 0 ;Testing if the vector is 0
 		;vptest ymm6, ymm6
 		;jnz programexitgreater
 		;vmulps ymm9, ymm9, ymm0
@@ -96,7 +95,7 @@ PixelMod PROC
 	vmulps ymm1, ymm1, ymm3 
 	vmulps ymm2, ymm2, ymm3 
 
-	vcvtps2dq ymm0, ymm0  ; Konwertuje zmiennoprzecinkowe wartoœci w ymm0 na ca³kowite
+	vcvtps2dq ymm0, ymm0  ; Float to int
 	vcvtps2dq ymm1, ymm1
 	vcvtps2dq ymm2, ymm2
  

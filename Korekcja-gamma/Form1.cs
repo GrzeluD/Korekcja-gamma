@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Threading.Tasks;
+using System.Threading;
 using System.Windows.Forms;
 using System.Diagnostics;
 using System.IO;
@@ -9,6 +10,8 @@ using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using System.Collections.Generic;
 using System.Linq;
+using System.Drawing;
+using System.Drawing.Imaging;
 
 namespace Korekcja_gamma
 {
@@ -22,6 +25,7 @@ namespace Korekcja_gamma
         public List<int> redColorArray = new List<int>();
         public List<int> greenColorArray = new List<int>();
         public List<int> blueColorArray = new List<int>();
+        private int check = 0;
 
         [DllImport(@"C:\Users\alber\Source\Repos\Korekcja-gamma\Korekcja-gamma\x64\Debug\GammaCorrection.dll")]
         static extern float PixelMod(float[] gammaMask, int[] segmentR, int[] segmentG, int[] segmentB);
@@ -67,108 +71,124 @@ namespace Korekcja_gamma
 
         // Obsługa kliknięcia przycisku przetwarzania obrazu
         private void processImageButton_Click(object sender, EventArgs e)
-        {
+        {            
+            check = 1;
+            processedBitmap = new Bitmap(originalBitmap.Width, originalBitmap.Height);
+
+            var rect = new Rectangle(0, 0, originalBitmap.Width, originalBitmap.Height);
+            BitmapData originalData = originalBitmap.LockBits(rect, ImageLockMode.ReadOnly, PixelFormat.Format24bppRgb);
+            BitmapData processedData = processedBitmap.LockBits(rect, ImageLockMode.WriteOnly, PixelFormat.Format24bppRgb);
+
             float gammaM = transparencyTrackBar.Value;
-            if (gammaM < 0) gammaM = (gammaM/100)*(-1);        
-            else gammaM=1+(gammaM/100);
+            if (gammaM < 0) gammaM = (gammaM / 100) * (-1);
+            else gammaM = 1 + (gammaM / 100);
+
+            float[] gammaMask = new float[8];
+                for (int i = 0; i < gammaMask.Length; i++)
+                {
+                    gammaMask[i] = gammaM;
+                }
 
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
 
-            float[] gammaMask = new float[8];
-            FillColorArraysFromBitmap();
-            for (int i = 0; i < gammaMask.Length; i++)
+            int bytesPerPixel = Image.GetPixelFormatSize(PixelFormat.Format24bppRgb) / 8;
+            int byteCount = originalData.Stride * originalData.Height;
+            byte[] pixelData = new byte[byteCount];
+            Marshal.Copy(originalData.Scan0, pixelData, 0, byteCount);
+
+            var parallelOptions = new ParallelOptions { MaxDegreeOfParallelism = selectedThreads };
+
+            Parallel.For(0, originalData.Height, parallelOptions, y =>
             {
-                gammaMask[i] = gammaM;
-            }
-            //List<int> segmentR = new List<int>();
-            //List<int> segmentG = new List<int>();
-            //List<int> segmentB = new List<int>();
-            int[] segmentR = new int[8];
-            int[] segmentG = new int[8];
-            int[] segmentB = new int[8];
-            //if (redColorArray.Count % 8 == 0) { MessageBox.Show("YES"); }
-            int totalLength = redColorArray.Count;
-            for (int i = 0; i < redColorArray.Count; i += 8)
-            {
-                int length = Math.Min(8, totalLength - i);
-                /*Array.Copy(redColorArray, 0, segmentR, 0, 8);
-                Array.Copy(greenColorArray, 0, segmentG, 0, 8);
-                Array.Copy(blueColorArray, 0, segmentB, 0, 8);*/
-                redColorArray.CopyTo(i, segmentR, 0, length);
-                blueColorArray.CopyTo(i, segmentG, 0, length);
-                greenColorArray.CopyTo(i, segmentB, 0, length);
-                PixelMod(gammaMask, segmentR, segmentG, segmentB);
-                for (int j = 0; j < length; j++)
+                int currentLine = y * originalData.Stride;
+                for (int x = 0; x < originalData.Width; x += 8)
                 {
-                    redColorArray[j+i] = segmentR[j];
-                    blueColorArray[j+i] = segmentB[j];
-                    greenColorArray[j+i] = segmentG[j];
+                    byte[] segmentR = new byte[8];
+                    byte[] segmentG = new byte[8];
+                    byte[] segmentB = new byte[8];
+
+                    for (int i = 0; i < 8 && x + i < originalData.Width; i++)
+                    {
+                        int pixelIndex = currentLine + (x + i) * bytesPerPixel;
+                        segmentB[i] = pixelData[pixelIndex];
+                        segmentG[i] = pixelData[pixelIndex + 1];
+                        segmentR[i] = pixelData[pixelIndex + 2];
+                    }
+                    int[] segmentRInt = Array.ConvertAll(segmentR, b => (int)b);
+                    int[] segmentGInt = Array.ConvertAll(segmentG, b => (int)b);
+                    int[] segmentBInt = Array.ConvertAll(segmentB, b => (int)b);
+
+                    PixelMod(gammaMask, segmentRInt, segmentGInt, segmentBInt);
+
+                    segmentG = Array.ConvertAll(segmentGInt, b => (byte)b);
+                    segmentR = Array.ConvertAll(segmentRInt, b => (byte)b);
+                    segmentB = Array.ConvertAll(segmentBInt, b => (byte)b);
+                    for (int i = 0; i < 8 && x + i < originalData.Width; i++)
+                    {
+                        int pixelIndex = currentLine + (x + i) * bytesPerPixel;
+                        pixelData[pixelIndex] = segmentB[i];
+                        pixelData[pixelIndex + 1] = segmentG[i];
+                        pixelData[pixelIndex + 2] = segmentR[i];
+                    }
                 }
-            }
+            });
+
+            Marshal.Copy(pixelData, 0, processedData.Scan0, byteCount);
+            originalBitmap.UnlockBits(originalData);
+            processedBitmap.UnlockBits(processedData);
 
             stopwatch.Stop();
-            long elapsedMilliseconds = stopwatch.ElapsedMilliseconds;
-
-            MessageBox.Show($"Czas przetwarzania: {elapsedMilliseconds} ms");
+            MessageBox.Show($"Czas przetwarzania: {stopwatch.ElapsedMilliseconds} ms");
             SavePixelInformationToFile();
-            UpdateProcessedBitmapFromColorArrays();
             ShowProcessedBitmap();
+
         }
-        private void FillColorArraysFromBitmap()
-        {
-            redColorArray.Clear();
-            greenColorArray.Clear();
-            blueColorArray.Clear();
-
-            for (int y = 0; y < originalBitmap.Height; y++)
-            {
-                for (int x = 0; x < originalBitmap.Width; x++)
-                {
-                    Color pixel = originalBitmap.GetPixel(x, y);
-                    redColorArray.Add(pixel.R);
-                    greenColorArray.Add(pixel.G);
-                    blueColorArray.Add(pixel.B);
-                }
-            }
-        }
-
-        private void UpdateProcessedBitmapFromColorArrays()
-        {
-            processedBitmap = new Bitmap(originalBitmap.Width, originalBitmap.Height);
-
-            int width = originalBitmap.Width;
-            int height = originalBitmap.Height;
-            int index = 0;
-
-            for (int y = 0; y < height; y++)
-            {
-                for (int x = 0; x < width; x++)
-                {
-                    Color newColor = Color.FromArgb(redColorArray[index], greenColorArray[index], blueColorArray[index]);
-                    processedBitmap.SetPixel(x, y, newColor);
-                    index++;
-                }
-            }
-        }
-
-        // Funkcja wykonująca korekcję gamma na obrazie
         private void ApplyGammaCorrection()
         {
             if (originalBitmap != null)
             {
+                
                 processedBitmap = new Bitmap(originalBitmap.Width, originalBitmap.Height);
 
-                // Iteracja przez piksele obrazu
-                for (int y = 0; y < originalBitmap.Height; y++)
+                var rect = new Rectangle(0, 0, originalBitmap.Width, originalBitmap.Height);
+                BitmapData originalData = originalBitmap.LockBits(rect, ImageLockMode.ReadOnly, PixelFormat.Format24bppRgb);
+                BitmapData processedData = processedBitmap.LockBits(rect, ImageLockMode.WriteOnly, PixelFormat.Format24bppRgb);
+
+                int bytesPerPixel = 3; // Dla formatu 24bppRgb
+                int heightInPixels = originalData.Height;
+                int widthInBytes = originalData.Width * bytesPerPixel;
+                byte[] pixelData = new byte[originalData.Stride * heightInPixels];
+
+                // Kopiowanie danych pikseli do tablicy
+                Marshal.Copy(originalData.Scan0, pixelData, 0, pixelData.Length);
+
+                // Ustawienie opcji Parallel
+                var parallelOptions = new ParallelOptions { MaxDegreeOfParallelism = selectedThreads };
+
+                Parallel.For(0, heightInPixels, parallelOptions, y =>
                 {
-                    for (int x = 0; x < originalBitmap.Width; x++)
+                    int currentLine = y * originalData.Stride;
+                    for (int x = 0; x < widthInBytes; x += bytesPerPixel)
                     {
-                        Color pixel = originalBitmap.GetPixel(x, y);
+                        // Odczytanie i przetwarzanie piksela
+                        int i =currentLine + x;
+                        byte blue = pixelData[i];
+                        byte green = pixelData[i + 1];
+                        byte red = pixelData[i + 2];
+                        Color pixel = Color.FromArgb(red, green, blue);
                         Color newPixel = ApplyGammaToPixel(pixel, gammaValue);
-                        processedBitmap.SetPixel(x, y, newPixel);
+
+                        pixelData[i] = newPixel.B;
+                        pixelData[i + 1] = newPixel.G;
+                        pixelData[i + 2] = newPixel.R;
                     }
-                }
+                });
+                // Kopiowanie danych z powrotem do Bitmapy
+                Marshal.Copy(pixelData, 0, processedData.Scan0, pixelData.Length);
+
+                originalBitmap.UnlockBits(originalData);
+                processedBitmap.UnlockBits(processedData);
             }
         }
 
@@ -242,12 +262,12 @@ namespace Korekcja_gamma
         // Funkcja wyświetlająca przetworzony obraz w PictureBox
         private void ShowProcessedBitmap()
         {
+            
             if (processedPictureBox != null)
             {
                 Controls.Remove(processedPictureBox);
                 processedPictureBox.Dispose();
             }
-
             processedPictureBox = new PictureBox
             {
                 Name = "processedPictureBox",
@@ -256,7 +276,6 @@ namespace Korekcja_gamma
                 SizeMode = PictureBoxSizeMode.Zoom,
                 Image = processedBitmap
             };
-
             Controls.Add(processedPictureBox);
             processedPictureBox.BringToFront();
             processedPictureBox.Show();
@@ -264,18 +283,15 @@ namespace Korekcja_gamma
 
         private void processImageButtonCS_Click(object sender, EventArgs e)
         {
-            gammaValue = transparencyTrackBar.Value;/// 10.0;
+            gammaValue = transparencyTrackBar.Value;
 
-
-            if (gammaValue < 0)
-            {
-                gammaValue =1-( (gammaValue / 100)* (-1));
-            }
-            else
-            { gammaValue = (gammaValue / 10); }
+            gammaValue = gammaValue < 0 ? 1 - ((gammaValue / 100) * (-1)) : (gammaValue / 10);
+            Thread[] threads = new Thread[selectedThreads];
 
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
+
+            List<Task> tasks = new List<Task>();
 
             // Uruchomienie zadania asynchronicznego dla przetwarzania obrazu
             Task imageProcessingTask = Task.Run(() =>
