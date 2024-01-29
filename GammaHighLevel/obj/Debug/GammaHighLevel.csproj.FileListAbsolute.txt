@@ -1,0 +1,6 @@
+C:\Users\alber\source\repos\Korekcja-gamma-main4\GammaHighLevel\obj\Debug\GammaHighLevel.csproj.AssemblyReference.cache
+C:\Users\alber\source\repos\Korekcja-gamma-main4\GammaHighLevel\obj\Debug\GammaHighLevel.csproj.CoreCompileInputs.cache
+C:\Users\alber\source\repos\Korekcja-gamma-main4\GammaHighLevel\bin\Debug\GammaHighLevel.dll
+C:\Users\alber\source\repos\Korekcja-gamma-main4\GammaHighLevel\bin\Debug\GammaHighLevel.pdb
+C:\Users\alber\source\repos\Korekcja-gamma-main4\GammaHighLevel\obj\Debug\GammaHighLevel.dll
+C:\Users\alber\source\repos\Korekcja-gamma-main4\GammaHighLevel\obj\Debug\GammaHighLevel.pdb

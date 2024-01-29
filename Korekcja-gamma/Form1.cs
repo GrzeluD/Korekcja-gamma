@@ -4,15 +4,11 @@ using System.Threading.Tasks;
 using System.Threading;
 using System.Windows.Forms;
 using System.Diagnostics;
-using System.IO;
 using System.Collections.Generic;
-using System.Windows.Forms;
 using System.Runtime.InteropServices;
-using System.Collections.Generic;
-using System.Linq;
-using System.Drawing;
 using System.Drawing.Imaging;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using GammaHighLevel;
+using System.Linq;
 
 namespace Korekcja_gamma
 {
@@ -28,8 +24,9 @@ namespace Korekcja_gamma
         public List<int> greenColorArray = new List<int>();
         public List<int> blueColorArray = new List<int>();
         private int check = 0;
+        GammaCorrectionC gammaC = new GammaCorrectionC();
 
-        [DllImport(@"C:\Code\ProjektJA\Korekcja-gamma\x64\Debug\GammaCorrection.dll")]
+        [DllImport(@"C:\Users\alber\source\repos\Korekcja-gamma\Korekcja-gamma\x64\Debug\GammaCorrection.dll")]
         static extern float PixelMod(float[] gammaMask, int[] segmentR, int[] segmentG, int[] segmentB);
 
         public Gamma()
@@ -99,10 +96,11 @@ namespace Korekcja_gamma
             byte[] pixelData = new byte[byteCount];
             Marshal.Copy(originalData.Scan0, pixelData, 0, byteCount);
 
-            threatsFromInput();
+            selectedThreads = threatsFromInput();
 
             var parallelOptions = new ParallelOptions { MaxDegreeOfParallelism = selectedThreads };
 
+            
             Parallel.For(0, originalData.Height, parallelOptions, y =>
             {
                 int currentLine = y * originalData.Stride;
@@ -137,75 +135,14 @@ namespace Korekcja_gamma
                     }
                 }
             });
-
+            stopwatch.Stop();
             Marshal.Copy(pixelData, 0, processedData.Scan0, byteCount);
             originalBitmap.UnlockBits(originalData);
             processedBitmap.UnlockBits(processedData);
 
-            stopwatch.Stop();
+            
             MessageBox.Show($"Converting time: {stopwatch.ElapsedMilliseconds} ms");
             ShowProcessedBitmap();
-
-        }
-        private void ApplyGammaCorrection()
-        {
-            if (originalBitmap != null)
-            {
-                
-                processedBitmap = new Bitmap(originalBitmap.Width, originalBitmap.Height);
-
-                var rect = new Rectangle(0, 0, originalBitmap.Width, originalBitmap.Height);
-                BitmapData originalData = originalBitmap.LockBits(rect, ImageLockMode.ReadOnly, PixelFormat.Format24bppRgb);
-                BitmapData processedData = processedBitmap.LockBits(rect, ImageLockMode.WriteOnly, PixelFormat.Format24bppRgb);
-
-                int bytesPerPixel = 3; // Dla formatu 24bppRgb
-                int heightInPixels = originalData.Height;
-                int widthInBytes = originalData.Width * bytesPerPixel;
-                byte[] pixelData = new byte[originalData.Stride * heightInPixels];
-
-                // Kopiowanie danych pikseli do tablicy
-                Marshal.Copy(originalData.Scan0, pixelData, 0, pixelData.Length);
-
-                threatsFromInput();
-
-                // Ustawienie opcji Parallel
-                var parallelOptions = new ParallelOptions { MaxDegreeOfParallelism = selectedThreads };
-
-                Parallel.For(0, heightInPixels, parallelOptions, y =>
-                {
-                    int currentLine = y * originalData.Stride;
-                    for (int x = 0; x < widthInBytes; x += bytesPerPixel)
-                    {
-                        // Odczytanie i przetwarzanie piksela
-                        int i =currentLine + x;
-                        byte blue = pixelData[i];
-                        byte green = pixelData[i + 1];
-                        byte red = pixelData[i + 2];
-                        Color pixel = Color.FromArgb(red, green, blue);
-                        Color newPixel = ApplyGammaToPixel(pixel, gammaValue);
-
-                        pixelData[i] = newPixel.B;
-                        pixelData[i + 1] = newPixel.G;
-                        pixelData[i + 2] = newPixel.R;
-                    }
-                });
-                // Kopiowanie danych z powrotem do Bitmapy
-                Marshal.Copy(pixelData, 0, processedData.Scan0, pixelData.Length);
-
-                originalBitmap.UnlockBits(originalData);
-                processedBitmap.UnlockBits(processedData);
-            }
-        }
-
-        // Funkcja stosująca korekcję gamma do pojedynczego piksela
-        private Color ApplyGammaToPixel(Color pixel, double gamma)
-        {          
-
-            double red = Math.Pow((double)pixel.R / 255.0, gamma) * 255;
-            double green = Math.Pow((double)pixel.G / 255.0, gamma) * 255;
-            double blue = Math.Pow((double)pixel.B / 255.0, gamma) * 255;
-
-            return Color.FromArgb((int)red, (int)green, (int)blue);
 
         }
 
@@ -220,7 +157,7 @@ namespace Korekcja_gamma
         }
 
         // Funkcja sprawdzająca ilość wątków z inputa
-        private void threatsFromInput()
+        /*private int threatsFromInput()
         {
          int maxThreads = Environment.ProcessorCount;
             if (int.TryParse(textBox1.Text, out int userInput))
@@ -230,12 +167,12 @@ namespace Korekcja_gamma
                     // Wpisana liczba jest większa niż maksymalna liczba wątków
                     MessageBox.Show($"Typed number ({userInput}) is higher than max number of threats ({maxThreads}).", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     MessageBox.Show($"Number of threads set: {maxThreads}", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    selectedThreads = 16;
+                    selectedThreads = (int)maxThreads;
                 }
                 else
                 {
-                    MessageBox.Show($"Number of threads set: {maxThreads}", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    selectedThreads = userInput;
+                    MessageBox.Show($"Number of threads set: {userInput}", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    selectedThreads = (int)userInput;
                 }
             }
             else
@@ -244,7 +181,51 @@ namespace Korekcja_gamma
                 MessageBox.Show("Empty thread input. Number of threads set: 1", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 selectedThreads = 1;
             }
+            return selectedThreads;
+        }*/
+
+        private int threatsFromInput()
+        {
+            int maxThreads = Environment.ProcessorCount;
+            int[] allowedThreadValues = { 64, 32, 16, 8, 4, 2, 1 };
+
+            if (int.TryParse(textBox1.Text, out int userInput) && userInput > 0)
+            {
+                if (allowedThreadValues.Contains(userInput))
+                {
+                    if (userInput > maxThreads)
+                    {
+                        selectedThreads = (int)maxThreads;
+                    }
+                    else
+                    {
+                        selectedThreads = (int)userInput;
+                    }
+                }
+                else
+                {
+                    if (userInput <= maxThreads)
+                    {
+                        // userInput jest jedną z dozwolonych wartości i nie przekracza maxThreads
+                        selectedThreads = (int)userInput;
+                    }
+                    else
+                    {
+                        // userInput jest większy niż maxThreads lub nie jest jedną z dozwolonych wartości
+                        MessageBox.Show($"Number of threads set: {maxThreads}", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        selectedThreads = (int)maxThreads;
+                    }
+                }
+            }
+            else
+            {
+                // Nic nie jest wpisane w textBox
+                MessageBox.Show("Empty thread input. Number of threads set: 1", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                selectedThreads = 1;
+            }
+            return selectedThreads;
         }
+
 
         // Funkcja wyświetlająca przetworzony obraz w PictureBox
         private void ShowProcessedBitmap()
@@ -300,11 +281,11 @@ namespace Korekcja_gamma
             stopwatch.Start();
 
             List<Task> tasks = new List<Task>();
-
+            selectedThreads = threatsFromInput();
             // Uruchomienie zadania asynchronicznego dla przetwarzania obrazu
             Task imageProcessingTask = Task.Run(() =>
             {
-                ApplyGammaCorrection();
+                gammaC.ApplyGammaCorrection(ref processedBitmap, originalBitmap, selectedThreads,(float)gammaValue);
             });
 
             // Kontynuacja po zakończeniu przetwarzania obrazu

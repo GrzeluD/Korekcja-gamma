@@ -1,7 +1,1 @@
-﻿  Assembling GammaCorrection.asm...
-  pch.cpp
-  dllmain.cpp
-  vectorPow.cpp
-  Generowanie kodu...
-     Trwa tworzenie biblioteki C:\Code\ProjektJA\Korekcja-gamma\x64\Debug\GammaCorrection.lib i obiektu C:\Code\ProjektJA\Korekcja-gamma\x64\Debug\GammaCorrection.exp
-  GammaCorrection.vcxproj -> C:\Code\ProjektJA\Korekcja-gamma\x64\Debug\GammaCorrection.dll
+﻿  GammaCorrection.vcxproj -> C:\Users\alber\source\repos\Korekcja-gamma\Korekcja-gamma\x64\Debug\GammaCorrection.dll

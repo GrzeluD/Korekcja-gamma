@@ -11,8 +11,7 @@ namespace Korekcja_gamma
 {
     internal static class Program
     {
-        [DllImport(@"C:\Users\alber\Source\Repos\Korekcja-gamma\Korekcja-gamma\x64\Debug\GammaCorrection.dll")]
-        static extern float PixelMod(float[] gammaMask, int[] segmentR, int[] segmentG, int[] segmentB);
+
         /// <summary>
         /// Główny punkt wejścia dla aplikacji.
         /// </summary>

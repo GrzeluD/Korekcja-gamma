@@ -38,12 +38,12 @@ PixelMod PROC
 	vcmppd ymm6, ymm4, ymm5, 1   ; bit mask of comparrision
 	vcmppd ymm7, ymm4, ymm5, 6  
 
-	; Sprawdzanie wyniku porównania. U¿ywamy instrukcji test do sprawdzenia, czy jakiekolwiek bity s¹ ustawione
-	vptest ymm6, ymm6 
-	jnz less           ; ymm4 < ymm5
-
+	
+	;vptest ymm6, ymm6 
+	;jnz less           ; ymm4 < ymm5
+	
 	vptest ymm7, ymm7  
-	jnz greater        ; ymm4 > ymm5
+	jnz greater        ; ymm4 >= ymm5
 
 	less:
 	
@@ -75,19 +75,6 @@ PixelMod PROC
 
 	jmp programexit
 
-		;vcmppd ymm6, ymm4, ymm5, 0 ;Testing if the vector is 0
-		;vptest ymm6, ymm6
-		;jnz programexitgreater
-		;vmulps ymm9, ymm9, ymm0
-		;vmulps ymm10, ymm10, ymm1
-		;vmulps ymm11, ymm11, ymm2
-		;vsubps ymm4, ymm4, ymm5
-		;jmp greater
-	;programexitgreater:
-
-	;vmovdqu ymm0 , ymm9
-	;vmovdqu ymm1 , ymm10
-	;vmovdqu ymm2 , ymm11
 
 	programexit:
 
